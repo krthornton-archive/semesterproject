@@ -2,3 +2,6 @@
 __pycache__/
 .vscode/
 SemesterProject.code-workspace
+.idea/
+Pipfile
+Pipfile.lock
