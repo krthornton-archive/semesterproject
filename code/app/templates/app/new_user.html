@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>New User Form</title>
+</head>
+
+<body>
+
+<form method="post">
+    {% csrf_token %}
+    <label for="id_username">Username: </label>
+    {{ form.username }}
+    <br>
+    <label for="id_first_name">First Name: </label>
+    {{ form.first_name }}
+    <br>
+    <label for="id_last_name">Last Name: </label>
+    {{ form.last_name }}
+    <br>
+    <label for="id_password">Password: </label>
+    {{ form.password }}
+    <br>
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+
+</html>
