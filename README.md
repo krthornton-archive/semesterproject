@@ -13,3 +13,6 @@
 # How to Run
 1. Run "docker-compose up -d && docker-compose logs -f" to run the webserver
 2. To stop, press CTRL-C to stop the log output and then run "docker-compose down"
+
+# How to Test
+You can access the webserver at "localhost:8080"
