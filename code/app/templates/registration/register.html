@@ -1,12 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'app/base.html' %}
 
-<head>
-    <title>New User Form</title>
-</head>
-
-<body>
-
+{% block login %}
 <form method="post">
     {% csrf_token %}
     <label for="id_username">Username: </label>
@@ -23,7 +17,4 @@
     <br>
     <button type="submit">Submit</button>
 </form>
-
-</body>
-
-</html>
+{% endblock %}

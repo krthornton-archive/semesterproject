@@ -7,21 +7,21 @@ from .forms import NewUserForm
 
 # Create your views here.
 def index(request):
-    return HttpResponse("hello world!")
+    context = {}
+    return render(request, 'app/home.html', context)
 
 
 # view for creating new users
 @require_http_methods(['GET', 'POST'])
-def new_user(request):
+def register(request):
     if request.method == 'GET':
         # this is a GET request, send empty form
         form = NewUserForm()
-        return render(request, 'app/new_user.html', {'form': form})
+        return render(request, 'registration/register.html', {'form': form})
     elif request.method == 'POST':
         # the user is submitting a form
         form = NewUserForm(request.POST)
         if form.is_valid():
-            user = NewUser(**form.cleaned_data)
+            user = NewUser.objects.create_user(**form.cleaned_data)
             user.save()
-            print("DEBUG: New user created! %s" % user.username)    # debug
-        return HttpResponse("User created! %s" % user.username)
+        return index(request)

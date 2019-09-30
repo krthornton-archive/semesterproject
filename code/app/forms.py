@@ -1,10 +1,10 @@
-from django.forms import ModelForm, PasswordInput
+from django import forms
 
 from .models import NewUser
 
 
 # form for creating a new user
-class NewUserForm(ModelForm):
+class NewUserForm(forms.ModelForm):
     class Meta:
         model = NewUser
         fields = [
@@ -14,5 +14,5 @@ class NewUserForm(ModelForm):
             'password',
         ]
         widgets = {
-            'password': PasswordInput(),
+            'password': forms.PasswordInput(),
         }
