@@ -1,0 +1,20 @@
+{% extends 'app/base.html' %}
+
+{% block breadcrumbs %}
+    <a href="/">Home</a> / <a href="/browse">Browse</a> / {{ item_name }}
+{% endblock %}
+
+{% block content %}
+
+    <!-- Item Information -->
+    <h1>{{ item_name }}</h1>
+    <p>
+        Description: {{ item_desc }}<br>
+        Price: ${{ item_price }}<br>
+        Stock: {{ item_stock }}<br>
+    </p>
+
+    <!-- Item Image -->
+    <img src="/static/images/{{ item_image }}" alt="{{ item_image }}" width="400" height="400">
+
+{% endblock %}

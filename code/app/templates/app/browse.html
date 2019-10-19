@@ -1,0 +1,30 @@
+{% extends 'app/base.html' %}
+
+
+{% block breadcrumbs %}
+    <a href="/">Home</a> / Browse
+{% endblock %} {# breadcrumbs #}
+
+{% block content %}
+
+    {# Errors #}
+    {% for error in errors %}
+        <p style="color: red;">
+            {{ error }}<br>
+        </p>
+    {% endfor %} {# fields #}
+
+    {# Search Results #}
+    {% if items %}
+        <h3>Search Results:</h3>
+        {% for item in items %}
+            <ul>
+                <a href="/item/{{ item.slug }}">{{ item.name }}</a>
+                <br>
+                <img src="/static/images/{{ item.image }}" alt="{{ item.image }}" width="400" height="400">
+                <br>
+            </ul>
+        {% endfor %}
+    {% endif %}
+
+{% endblock %} {# content #}

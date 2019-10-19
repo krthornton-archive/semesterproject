@@ -9,17 +9,22 @@
 </head>
 
 <body>
-{% block login %}
-    {% if user.is_authenticated %}
-        <p>Hi {{ user.username }}!</p>
-        <p><a href="{% url 'logout' %}">Logout</a></p>
-    {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
-    {% endif %}
-{% endblock %}
+    {% block breadcrumbs %}
+        <a href="/">Home</a>
+    {% endblock %}
+    {% block login %}{% endblock %}
+    {% block search %}
+        <p>
+            <form method="POST" action="/browse">
+                {% csrf_token %}
+                <label for="name">Search:</label>
+                <input type="text" name="name"></input>
+                <button type="submit">Search</button>
+            </form>
+        </p>
 
-{% block content %}
-{% endblock %}
+    {% endblock %}
+    {% block content %}{% endblock %}
 </body>
 
 </html>

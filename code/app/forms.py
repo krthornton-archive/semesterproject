@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import NewUser
+from .models import NewUser, Item
 
 
 # form for creating a new user
@@ -16,3 +16,12 @@ class NewUserForm(forms.ModelForm):
         widgets = {
             'password': forms.PasswordInput(),
         }
+
+
+# form for searching for items
+class ItemSearchForm(forms.ModelForm):
+    class Meta:
+        model = Item
+        fields = [
+            'name'
+        ]
