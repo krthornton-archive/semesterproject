@@ -18,6 +18,18 @@ class NewUserForm(forms.ModelForm):
         }
 
 
+# form for modifying a user
+class UpdateUserInfoForm(forms.ModelForm):
+    class Meta:
+        model = NewUser
+        fields = [
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+        ]
+
+
 # form for searching for items
 class ItemSearchForm(forms.ModelForm):
     class Meta:

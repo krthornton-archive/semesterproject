@@ -1,0 +1,34 @@
+{% extends 'app/base.html' %}
+
+{% block breadcrumbs %}
+    <a href="/">Home</a> / Account
+{% endblock %}
+
+{% block content %}
+
+    <h1>Manage Account</h1>
+
+    <p>
+        {% if updated %}
+            User info updated!
+        {% endif %}
+    </p>
+
+    <p>
+        {{ user.first_name }}
+        {{ user.last_name }}
+    </p>
+
+    <p>
+        {{ user.username }}
+        <br>
+        {{ user.email }}
+    </p>
+
+    <p>
+        <a href="update_account">Update Above Information</a>
+        <br>
+        <a href="change_password">Change Password</a>
+    </p>
+
+{% endblock %} {# content #}

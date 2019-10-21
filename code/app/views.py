@@ -1,15 +1,89 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators.http import require_http_methods
-from django.contrib.auth import login
+from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordChangeForm
 
 from .models import NewUser, Item
-from .forms import NewUserForm, ItemSearchForm
+from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm
 
 
 # view for the home page
 def index(request):
     context = {}
     return render(request, 'app/home.html', context)
+
+
+# view for managing a user's account
+@login_required
+@require_http_methods(['GET'])
+def view_account(request):
+    context = {
+        'user': request.user,
+    }
+    return render(request, 'registration/view_account.html', context)
+
+
+# view for updating information about a user's account
+@login_required
+@require_http_methods(['GET', 'POST'])
+def update_account_info(request):
+    if request.method == 'POST':
+        # if this is a POST, user has submitted updated information
+        form = UpdateUserInfoForm(request.POST, instance=request.user)
+        if form.is_valid():
+            # if valid, redirect to view_account and re-login the user
+            form.save()
+            context = {
+                'user': request.user,
+                'updated': True,
+            }
+            return render(request, 'registration/view_account.html', context)
+        else:
+            # form is not valid, notify user
+            context = {
+                'user': request.user,
+                'form': form,
+            }
+            return render(request, 'registration/update_account.html', context)
+    else:
+        form = UpdateUserInfoForm()
+        context = {
+            'user': request.user,
+            'form': form,
+        }
+        return render(request, 'registration/update_account.html', context)
+
+
+# view for changing a user's password
+@login_required
+@require_http_methods(['GET', 'POST'])
+def change_password(request):
+    if request.method == 'POST':
+        # user has submitted a new password
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            # password is good; save and re-login the user
+            user = form.save()
+            update_session_auth_hash(request, user)
+            context = {
+                'user': request.user,
+                'password_changed': 'success',
+            }
+            return render(request, 'registration/view_account.html', context)
+        else:
+            # password is bad, notify user
+            context = {
+                'form': form,
+            }
+            return render(request, 'registration/change_password.html', context)
+    else:
+        # this is a GET request, display password change form
+        form = PasswordChangeForm(request.user)
+        context = {
+            'form': form,
+        }
+        return render(request, 'registration/change_password.html', context)
 
 
 # view for creating new users

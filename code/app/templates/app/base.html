@@ -13,17 +13,7 @@
         <a href="/">Home</a>
     {% endblock %}
     {% block login %}{% endblock %}
-    {% block search %}
-        <p>
-            <form method="POST" action="/browse">
-                {% csrf_token %}
-                <label for="name">Search:</label>
-                <input type="text" name="name"></input>
-                <button type="submit">Search</button>
-            </form>
-        </p>
-
-    {% endblock %}
+    {% block search %}{% endblock %}
     {% block content %}{% endblock %}
 </body>
 

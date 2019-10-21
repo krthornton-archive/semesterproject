@@ -5,6 +5,17 @@
     <a href="/">Home</a> / Browse
 {% endblock %} {# breadcrumbs #}
 
+{% block search %}
+    <p>
+        <form method="POST" action="/browse">
+            {% csrf_token %}
+            <label for="name">Search:</label>
+            <input type="text" name="name"></input>
+            <button type="submit">Search</button>
+        </form>
+    </p>
+{% endblock %} {# search #}
+
 {% block content %}
 
     {# Errors #}
