@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import NewUser, Item
+from .models import NewUser, Item, ShoppingCartItem
 
 
 # form for creating a new user
@@ -36,4 +36,25 @@ class ItemSearchForm(forms.ModelForm):
         model = Item
         fields = [
             'name'
+        ]
+
+
+# form for adding an item to a shopping cart
+class NewShoppingCartItemForm(forms.ModelForm):
+    class Meta:
+        model = ShoppingCartItem
+        fields = [
+            'user_key',
+            'item_key',
+            'quantity',
+        ]
+
+
+# form for removing an item from a shopping cart
+class RemoveCartItemForm(forms.ModelForm):
+    class Meta:
+        model = ShoppingCartItem
+        fields = [
+            'user_key',
+            'item_key',
         ]

@@ -36,5 +36,8 @@ class ShoppingCartItem(models.Model):
     item_key = models.ForeignKey(to=Item, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1, blank=False)
 
+    class Meta:
+        unique_together = ('user_key', 'item_key')
+
     def __str__(self):
         return "\"%s\" in %s's cart" % (self.item_key.name, self.user_key.username)

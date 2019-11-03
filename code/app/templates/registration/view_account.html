@@ -6,29 +6,77 @@
 
 {% block content %}
 
+    <!-- Account Info -->
     <h1>Manage Account</h1>
-
     <p>
         {% if updated %}
             User info updated!
         {% endif %}
     </p>
-
     <p>
         {{ user.first_name }}
         {{ user.last_name }}
     </p>
-
     <p>
         {{ user.username }}
         <br>
         {{ user.email }}
     </p>
-
     <p>
         <a href="update_account">Update Above Information</a>
         <br>
         <a href="change_password">Change Password</a>
     </p>
 
+    <!-- Shopping Cart -->
+    <h1>Shopping Cart</h1>
+    <table>
+        {% for item in cart_items %}
+            <tr id="row-{{ item.item_key.uid }}">
+                <td>
+                    <img src="static/images/{{ item.item_key.image }}" width="100" height="100">
+                </td>
+                <td>
+                    <a href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
+                    <br>
+                    Quantity: {{ item.quantity }}
+                </td>
+                <td>
+                    <form method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
+                        <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        {% endfor %} {# items in shopping cart #}
+    </table>
+
 {% endblock %} {# content #}
+
+{% block script %}
+
+    <!-- Import jquery from static -->
+    <script type="text/javascript" src="{{ STATIC_URL }}/static/js/jquery-3.4.1.min.js"></script>
+
+    <script>
+
+        // remove from cart
+        $("form").submit(function SubmitForm(e) {
+            $.ajax({
+                type: 'POST',
+                url: '/remove_from_cart',
+                data: $(this).serializeArray(),
+                dataType: 'json'
+            }).done(function(sucMsg) {
+                console.log(sucMsg);
+            }).fail(function(errMsg) {
+                console.log(errMsg);
+                });
+            return false;
+        });
+
+    </script>
+
+{% endblock %} {# endblock #}

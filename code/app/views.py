@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
 
-from .models import NewUser, Item
-from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm
+from .models import NewUser, Item, ShoppingCartItem
+from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm, NewShoppingCartItemForm, RemoveCartItemForm
 
 
 # view for the home page
@@ -20,6 +21,7 @@ def index(request):
 def view_account(request):
     context = {
         'user': request.user,
+        'cart_items': ShoppingCartItem.objects.filter(user_key=request.user),
     }
     return render(request, 'registration/view_account.html', context)
 
@@ -108,17 +110,56 @@ def register(request):
 
 # view for viewing a specific item
 @require_http_methods(['GET'])
-def item_description(request, slug):
+def item_description(request, slug, context=None):
     # get requested object from DB and return info about it
     item = get_object_or_404(Item, slug=slug)
-    context = {
-        'item_name': item.name,
-        'item_image': item.image,
-        'item_desc': item.desc,
-        'item_price': item.price,
-        'item_stock': item.stock,
-    }
+    if context is None:
+        context = {
+            'item': item,
+            'user': request.user,
+        }
     return render(request, 'app/item_description.html', context)
+
+
+# view for adding a specific item to a user's shopping cart
+@login_required
+@require_http_methods(['POST'])
+def add_to_cart(request):
+    form = NewShoppingCartItemForm(request.POST)
+    if form.is_valid():
+        form.save()
+        context = {
+            'status': 'success',
+        }
+        return JsonResponse(context)
+    else:
+        context = {
+            'status': 'failed',
+            'err': 'This item is already in your cart!',
+        }
+        return JsonResponse(context)
+
+
+# view for removing items from a user's shopping cart
+@login_required
+@require_http_methods(['POST'])
+def remove_from_cart(request):
+    form = RemoveCartItemForm(request.POST)
+    form.full_clean()
+    if form.cleaned_data['item_key'] and form.cleaned_data['user_key']:
+        cart_item = ShoppingCartItem.objects.get(item_key=form.cleaned_data['item_key'],
+                                                 user_key=form.cleaned_data['user_key'])
+        cart_item.delete()
+        context = {
+            'status': 'success',
+        }
+        return JsonResponse(context)
+    else:
+        context = {
+            'status': 'failed',
+            'err': 'Invalid form.'
+        }
+        return JsonResponse(context)
 
 
 # view for browsing/searching for items
