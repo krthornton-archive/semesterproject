@@ -20,4 +20,4 @@
 3. Choose "Django Runserver"
 4. Click the green Play button
 
-hello world!
+hello world! soma;lkdsjf ligma joe mama what about yuri? tarded
