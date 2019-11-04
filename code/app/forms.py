@@ -27,6 +27,9 @@ class UpdateUserInfoForm(forms.ModelForm):
             'first_name',
             'last_name',
             'email',
+            'address',
+            'phone_number',
+            'credit_card',
         ]
 
 

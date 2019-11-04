@@ -7,8 +7,9 @@ from django.utils.text import slugify
 
 # describes a user of this website
 class NewUser(AbstractUser):
-    # currently just a placeholder in case we need more attributes
-    pass
+    address = models.TextField(blank=True)
+    phone_number = models.TextField(blank=True)
+    credit_card = models.TextField(blank=True)
 
 
 # describes an item in inventory

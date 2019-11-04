@@ -1,6 +1,7 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
+from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
@@ -36,11 +37,8 @@ def update_account_info(request):
         if form.is_valid():
             # if valid, redirect to view_account and re-login the user
             form.save()
-            context = {
-                'user': request.user,
-                'updated': True,
-            }
-            return render(request, 'registration/view_account.html', context)
+            messages.add_message(request, messages.INFO, "User information updated!")
+            return redirect('/view_account')
         else:
             # form is not valid, notify user
             context = {
@@ -68,11 +66,8 @@ def change_password(request):
             # password is good; save and re-login the user
             user = form.save()
             update_session_auth_hash(request, user)
-            context = {
-                'user': request.user,
-                'password_changed': 'success',
-            }
-            return render(request, 'registration/view_account.html', context)
+            messages.add_message(request, messages.INFO, "User password changed!")
+            return redirect('/view_account')
         else:
             # password is bad, notify user
             context = {

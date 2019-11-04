@@ -8,11 +8,15 @@
 
     <!-- Account Info -->
     <h1>Manage Account</h1>
-    <p>
-        {% if updated %}
-            User info updated!
-        {% endif %}
-    </p>
+
+    {% block messages %}
+        {% if messages %}
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %} {# for message #}
+        {% endif %} {# if messages #}
+    {% endblock %}
+
     <p>
         {{ user.first_name }}
         {{ user.last_name }}
@@ -21,6 +25,19 @@
         {{ user.username }}
         <br>
         {{ user.email }}
+    </p>
+    <p>
+        {% if user.address %}
+            {{ user.address }}
+            <br>
+        {% endif %}
+        {% if user.phone_number %}
+            {{ user.phone_number }}
+            <br>
+        {% endif %}
+        {% if user.credit_card %}
+            {{ user.credit_card }}
+        {% endif %}
     </p>
     <p>
         <a href="update_account">Update Above Information</a>
