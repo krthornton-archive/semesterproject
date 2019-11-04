@@ -20,4 +20,15 @@
 3. Choose "Django Runserver"
 4. Click the green Play button
 
+# How to Merge w/ Pycharm
+1. Make your changes to the code
+2. In Pycharm, in the bottom right click on "Git:_____" and choose "New Branch"
+3. Name the new branch something meaningful to your changes (ligma does not count)
+4. In the bottom left, click on "Version Control"
+5. Click the green check-mark
+6. Select all files you intend to push to the repo and type up a commit message
+7. In the bottom right, choose the drop down under "Commit" and choose "Commit and Push"
+8. Go to 'https://github.com/krthornton/semesterproject/branches' in your browser
+9. Select your branch and select "Create Pull Request"
+
 hello world! soma;lkdsjf ligma joe mama what about yuri? tarded
