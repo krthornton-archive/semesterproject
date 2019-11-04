@@ -19,3 +19,5 @@
 2. Click the "Configurations" dropdown from the top right (next to the play button)
 3. Choose "Django Runserver"
 4. Click the green Play button
+
+hello world!
