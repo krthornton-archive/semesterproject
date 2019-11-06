@@ -61,3 +61,15 @@ class RemoveCartItemForm(forms.ModelForm):
             'user_key',
             'item_key',
         ]
+
+
+# form for confirming that a user wants to checkout
+class ConfirmCheckoutForm(forms.ModelForm):
+    confirm = forms.BooleanField()
+
+    class Meta:
+        model = NewUser
+        fields = [
+            'address',
+            'credit_card',
+        ]
