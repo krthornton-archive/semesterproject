@@ -5,17 +5,8 @@
 {% endblock %}
 
 {% block content %}
-
     <!-- Account Info -->
     <h1>Manage Account</h1>
-
-    {% block messages %}
-        {% if messages %}
-            {% for message in messages %}
-                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-            {% endfor %} {# for message #}
-        {% endif %} {# if messages #}
-    {% endblock %}
 
     <p>
         {{ user.first_name }}
@@ -70,13 +61,11 @@
         {% endfor %} {# items in shopping cart #}
     </table>
 
+    <!-- Checkout -->
+    <a href="/checkout" class="btn btn-primary">Checkout</a>
 {% endblock %} {# content #}
 
 {% block script %}
-
-    <!-- Import jquery from static -->
-    <script type="text/javascript" src="{{ STATIC_URL }}/static/js/jquery-3.4.1.min.js"></script>
-
     <script>
 
         // remove from cart
@@ -95,5 +84,4 @@
         });
 
     </script>
-
 {% endblock %} {# endblock #}

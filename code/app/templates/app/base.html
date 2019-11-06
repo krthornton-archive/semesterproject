@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/static/css/bootstrap.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}/static/js/jquery-3.4.1.min.js"></script>
     {% block title %}
     <title>Title</title>
     {% endblock %}
@@ -11,6 +13,13 @@
 <body>
     {% block breadcrumbs %}
         <a href="/">Home</a>
+    {% endblock %}
+    {% block messages %}
+        {% if messages %}
+            {% for message in messages %}
+                <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+            {% endfor %} {# for message #}
+        {% endif %} {# if messages #}
     {% endblock %}
     {% block login %}{% endblock %}
     {% block search %}{% endblock %}
