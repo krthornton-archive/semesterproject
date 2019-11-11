@@ -73,4 +73,3 @@ class ConfirmCheckoutForm(forms.ModelForm):
             'address',
             'credit_card',
         ]
-
