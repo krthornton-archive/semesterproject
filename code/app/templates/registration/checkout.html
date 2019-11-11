@@ -4,6 +4,9 @@
     <a href="/">Home</a> / <a href="view_account">Account</a> / Checkout
 {% endblock %}
 
+
+
+
 {% block content %}
     <h1>Checkout</h1>
     <table>
@@ -30,10 +33,10 @@
         {% csrf_token %}
         <input type="hidden" name="confirm" value="true">
         <label for="address">Address: </label>
-        <input type="text" name="address" value="{{ user.address }}"><br>
+        <input type="text" id="address" value="{{ user.address }}" required><br>
         <label for="credit_card">Credit Card: </label>
-        <input type="text" name="credit_card" value="{{ user.credit_card }}"><br>
-        <input type="submit" class="btn btn-primary" value="Confirm and Checkout">
+        <input type="text" id="credit_card" value="{{ user.credit_card }}" required><br>
+        <button onclick="check()">Confirm and Checkout</button>
     </form>
 
 {% endblock %} {# content #}
