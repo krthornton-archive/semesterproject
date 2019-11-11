@@ -30,9 +30,9 @@
         {% csrf_token %}
         <input type="hidden" name="confirm" value="true">
         <label for="address">Address: </label>
-        <input type="text" name="address" value="{{ user.address }}"><br>
+        <input type="text" id="address" value="{{ user.address }}" required><br>
         <label for="credit_card">Credit Card: </label>
-        <input type="text" name="credit_card" value="{{ user.credit_card }}"><br>
+        <input type="text" id="credit_card" value="{{ user.credit_card }}" required><br>
         <input type="submit" class="btn btn-primary" value="Confirm and Checkout">
     </form>
 
