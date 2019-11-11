@@ -137,26 +137,33 @@ def add_to_cart(request):
         return JsonResponse(context)
 
 
-# view for removing items from a user's shopping cart
+# view for displaying a user's shopping cart
 @login_required
-@require_http_methods(['POST'])
-def remove_from_cart(request):
-    form = RemoveCartItemForm(request.POST)
-    form.full_clean()
-    if form.cleaned_data['item_key'] and form.cleaned_data['user_key']:
-        cart_item = ShoppingCartItem.objects.get(item_key=form.cleaned_data['item_key'],
-                                                 user_key=form.cleaned_data['user_key'])
-        cart_item.delete()
-        context = {
-            'status': 'success',
-        }
-        return JsonResponse(context)
+@require_http_methods(['GET', 'POST'])
+def view_cart(request):
+    if request.method == 'POST':
+        # if this is a POST request, validate form
+        form = RemoveCartItemForm(request.POST)
+        form.full_clean()
+        if form.cleaned_data['item_key'] and form.cleaned_data['user_key']:
+            # remove requested item from user's shopping cart
+            cart_item = ShoppingCartItem.objects.get(item_key=form.cleaned_data['item_key'],
+                                                     user_key=form.cleaned_data['user_key'])
+            item_name = cart_item.item_key.name
+            cart_item.delete()
+            messages.add_message(request, messages.SUCCESS, "Successfully removed %s" % item_name)
+            return redirect('/view_cart')
+        else:
+            # something went wrong, notify user
+            messages.add_message(request, messages.ERROR, "Error: invalid form")
+            return redirect('/view_cart')
     else:
+        # this must be a GET request, display user's shopping cart
         context = {
-            'status': 'failed',
-            'err': 'Invalid form.'
+            'user': request.user,
+            'cart_items': ShoppingCartItem.objects.filter(user_key=request.user)
         }
-        return JsonResponse(context)
+        return render(request, 'registration/view_cart.html', context)
 
 
 # view for checking out the user's shopping cart
