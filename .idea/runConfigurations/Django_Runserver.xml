@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Django Runserver" type="Python.DjangoServer" factoryName="Django server">
-    <module name="semesterproject" />
+    <module name="Semester Project" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
