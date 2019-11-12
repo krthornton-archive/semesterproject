@@ -27,7 +27,7 @@
     {# check if the current user is logged in #}
     {% if user.is_authenticated %}
         <!-- Add to Cart -->
-        <form id="add_to_cart" action="/add_to_cart" method="POST">
+        <form id="add_to_cart" method="POST">
             {% csrf_token %}
             <input type="hidden" name="item_key" value="{{ item.uid }}">
             <input type="hidden" name="user_key" value="{{ user.id }}">
@@ -41,34 +41,3 @@
     {% endif %} {# user is authenticated #}
 
 {% endblock %}
-
-
-{% block script %}
-
-    <!-- Import jquery from static -->
-    <script type="text/javascript" src="{{ STATIC_URL }}/static/js/jquery-3.4.1.min.js"></script>
-
-    <script>
-
-        // add to cart
-        var form = $("#add_to_cart");
-        form.submit(function (event) {
-            var form_data = form.serialize();
-            $.ajax({
-                type: 'POST',
-                url: '/add_to_cart',
-                data: form_data,
-                dataType: 'json',
-                success: function(sucMsg) {
-                    console.log(sucMsg);
-                },
-                failure: function(errMsg) {
-                    console.log(errMsg);
-                }
-            });
-            return false;   // prevents page redirect
-        });
-
-    </script>
-
-{% endblock %} {# endblock #}

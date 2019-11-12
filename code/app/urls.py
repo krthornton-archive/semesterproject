@@ -6,7 +6,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('browse', views.browse_items, name='browse'),
     re_path(r'^item/(?P<slug>[a-z\-0-9]+)/$', views.item_description, name='description'),
-    path('add_to_cart', views.add_to_cart, name='add_to_cart'),
     path('view_cart', views.view_cart, name='view_cart'),
     path('checkout', views.checkout, name='checkout'),
     path('view_account', views.view_account, name='view_account'),
