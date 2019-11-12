@@ -1,10 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
+from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
 
 from .models import NewUser, Item, ShoppingCartItem
 from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
@@ -106,35 +106,37 @@ def register(request):
 
 
 # view for viewing a specific item
-@require_http_methods(['GET'])
-def item_description(request, slug, context=None):
-    # get requested object from DB and return info about it
-    item = get_object_or_404(Item, slug=slug)
-    if context is None:
+@require_http_methods(['GET', 'POST'])
+def item_description(request, slug):
+    if request.method == 'POST':
+        # double check that user is authenticated
+        if not request.user.is_authenticated:
+            # if the user isn't logged in, redirect to login page
+            messages.add_message(request, messages.ERROR, "You must be logged in to add to cart.")
+            return redirect('/accounts/login')
+        # if this is a POST request, user is adding to their cart
+        item = get_object_or_404(Item, slug=slug)
+        form = NewShoppingCartItemForm(request.POST)
+        if form.is_valid():
+            # save the form to add item to the user's cart; notify user of success
+            form.save()
+            messages.add_message(request, messages.SUCCESS, "Successfully added %s to your shopping cart." % item.name)
+        else:
+            if form.has_error(NON_FIELD_ERRORS, 'unique_together'):
+                # user must already have the item in their cart; notify the user
+                messages.add_message(request, messages.INFO, "This item is already in your cart!")
+            else:
+                # an unknown error occurred; notify the user
+                messages.add_message(request, messages.ERROR, "An unknown error occurred.")
+        return redirect('/item/%s' % slug)
+    else:
+        # this must be a GET request, get requested object from DB and return info about it
+        item = get_object_or_404(Item, slug=slug)
         context = {
             'item': item,
             'user': request.user,
         }
-    return render(request, 'app/item_description.html', context)
-
-
-# view for adding a specific item to a user's shopping cart
-@login_required
-@require_http_methods(['POST'])
-def add_to_cart(request):
-    form = NewShoppingCartItemForm(request.POST)
-    if form.is_valid():
-        form.save()
-        context = {
-            'status': 'success',
-        }
-        return JsonResponse(context)
-    else:
-        context = {
-            'status': 'failed',
-            'err': 'This item is already in your cart!',
-        }
-        return JsonResponse(context)
+        return render(request, 'app/item_description.html', context)
 
 
 # view for displaying a user's shopping cart
