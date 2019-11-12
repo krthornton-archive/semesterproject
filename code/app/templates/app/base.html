@@ -11,9 +11,27 @@
 </head>
 
 <body>
-    {% block breadcrumbs %}
-        <a href="/">Home</a>
-    {% endblock %}
+    {% block navbar %}
+        <nav class="navbar navbar-expand-lg bg-light justify-content-between">
+            <div class="navbar-nav">
+                <a class="navbar-brand" href="/">snaV</a>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/browse">Browse</a>
+                    </li>
+                </ul>
+            </div>
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="/view_account">Account</a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="/view_cart">Shopping Cart</a>
+                </li>
+            </ul>
+        </nav>
+    {% endblock %} {# navbar #}
+
     {% block messages %}
         {% if messages %}
             {% for message in messages %}
@@ -21,6 +39,7 @@
             {% endfor %} {# for message #}
         {% endif %} {# if messages #}
     {% endblock %}
+
     {% block login %}{% endblock %}
     {% block search %}{% endblock %}
     {% block content %}{% endblock %}
