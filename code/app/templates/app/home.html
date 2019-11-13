@@ -1,12 +1,17 @@
 {% extends 'app/base.html' %}
 
-{% block login %}
-    {% if user.is_authenticated %}
-        <p>Hi {{ user.username }}!</p>
-        <p><a href="{% url 'logout' %}">Logout</a></p>
-        <p><a href="/view_account">Manage Account</a></p>
-        <p><a href="/view_cart">View Shopping Cart</a></p>
-    {% else %}
-        <p>Please <a href="{% url 'login' %}">login</a> or <a href="{% url 'register' %}">register</a>.</p>
+{% block content %}
+    <h3>Welcome to snaV!</h3>
+
+    {% if items %}
+        <p>Recently Added:</p>
+        {% for item in items %}
+            <ul>
+                <a href="/item/{{ item.slug }}">{{ item.name }}</a>
+                <br>
+                <img src="/static/images/{{ item.image }}" alt="{{ item.image }}" width="400" height="400">
+                <br>
+            </ul>
+        {% endfor %}
     {% endif %}
-{% endblock %}
+{% endblock %} {# content #}
