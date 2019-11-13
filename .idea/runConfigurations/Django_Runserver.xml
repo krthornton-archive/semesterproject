@@ -1,22 +1,22 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Django Runserver" type="Python.DjangoServer" factoryName="Django server">
-    <module name="Semester Project" />
+    <module name="semesterproject" />
     <option name="INTERPRETER_OPTIONS" value="" />
     <option name="PARENT_ENVS" value="true" />
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
       <env name="DJANGO_SETTINGS_MODULE" value="project.settings" />
     </envs>
-    <option name="SDK_HOME" value="$USER_HOME$/.local/share/virtualenvs/Semester_Project-TZOXPrG4/bin/python" />
+    <option name="SDK_HOME" value="" />
     <option name="WORKING_DIRECTORY" value="" />
-    <option name="IS_MODULE_SDK" value="false" />
+    <option name="IS_MODULE_SDK" value="true" />
     <option name="ADD_CONTENT_ROOTS" value="true" />
     <option name="ADD_SOURCE_ROOTS" value="true" />
     <option name="launchJavascriptDebuger" value="false" />
     <option name="port" value="8080" />
     <option name="host" value="localhost" />
     <option name="additionalOptions" value="" />
-    <option name="browserUrl" value="" />
+    <option name="browserUrl" value="http://localhost:8080/" />
     <option name="runTestServer" value="false" />
     <option name="runNoReload" value="false" />
     <option name="useCustomRunCommand" value="false" />
