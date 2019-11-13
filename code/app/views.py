@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordChangeForm
-from django.core.exceptions import NON_FIELD_ERRORS, ValidationError
+from django.core.exceptions import NON_FIELD_ERRORS
 
 from .models import NewUser, Item, ShoppingCartItem
 from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
@@ -12,10 +12,11 @@ from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
                    ConfirmCheckoutForm
 
 
-# view for the home page
+# shows the user the home page along with the recently added shoes
 def index(request):
     context = {
         'user': request.user,
+        'items': Item.objects.order_by('date_added'),
     }
     return render(request, 'app/home.html', context)
 
