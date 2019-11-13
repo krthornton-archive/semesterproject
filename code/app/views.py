@@ -14,7 +14,9 @@ from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
 
 # view for the home page
 def index(request):
-    context = {}
+    context = {
+        'user': request.user,
+    }
     return render(request, 'app/home.html', context)
 
 
