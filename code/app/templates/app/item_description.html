@@ -29,10 +29,13 @@
             <input type="hidden" name="user_key" value="{{ user.id }}">
             <label for="quantity">Quantity: </label>
             <input type="number" min="1" name="quantity" value="1">
-            <button type="submit">Add to Cart</button>
+            <button  type="submit">Add to Cart</button>
         </form>
+
         {% if item_added == 'success' %}
-            <p style="color: green;">Item added to cart!</p>
+            <script>
+            alertify.notify('sample', 'success', 5, function(){  console.log('dismissed'); });
+            </script>
         {% endif %} {# item add success #}
     {% endif %} {# user is authenticated #}
 
