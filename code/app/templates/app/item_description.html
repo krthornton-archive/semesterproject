@@ -1,42 +1,41 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
+    <div class="container">
 
-    <!-- Errors -->
-    {% for field in form %}
-        {% for error in field.errors %}
-            <p style="color: red;">{{ field.name }}: {{ error }}</p>
-        {% endfor %} {# errors #}
-    {% endfor %} {# fields #}
+        <!-- Errors -->
+        {% for field in form %}
+            {% for error in field.errors %}
+                <p style="color: red;">{{ field.name }}: {{ error }}</p>
+            {% endfor %} {# errors #}
+        {% endfor %} {# fields #}
 
-    <!-- Item Information -->
-    <h1>{{ item.name }}</h1>
-    <p>
-        Description: {{ item.desc }}<br>
-        Price: ${{ item.price }}<br>
-        Stock: {{ item.stock }}<br>
-    </p>
+        <!-- Item Information -->
+        <h1>{{ item.name }}</h1>
+        <p>
+            Description: {{ item.desc }}<br>
+            Price: ${{ item.price }}<br>
+            Stock: {{ item.stock }}<br>
+        </p>
 
-    <!-- Item Image -->
-    <img src="/static/images/{{ item.image }}" alt="{{ item_image }}" width="400" height="400">
+        <!-- Item Image -->
+        <img src="/static/images/{{ item.image }}" alt="{{ item_image }}" width="400" height="400">
 
-    {# check if the current user is logged in #}
-    {% if user.is_authenticated %}
-        <!-- Add to Cart -->
-        <form id="add_to_cart" method="POST">
-            {% csrf_token %}
-            <input type="hidden" name="item_key" value="{{ item.uid }}">
-            <input type="hidden" name="user_key" value="{{ user.id }}">
-            <label for="quantity">Quantity: </label>
-            <input type="number" min="1" name="quantity" value="1">
-            <button  type="submit">Add to Cart</button>
-        </form>
+        {# check if the current user is logged in #}
+        {% if user.is_authenticated %}
+            <!-- Add to Cart -->
+            <form id="add_to_cart" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="item_key" value="{{ item.uid }}">
+                <input type="hidden" name="user_key" value="{{ user.id }}">
+                <label for="quantity">Quantity: </label>
+                <input type="number" min="1" name="quantity" value="1">
+                <button type="submit">Add to Cart</button>
+            </form>
+            {% if item_added == 'success' %}
+                <p style="color: green;">Item added to cart!</p>
+            {% endif %} {# item add success #}
+        {% endif %} {# user is authenticated #}
 
-        {% if item_added == 'success' %}
-            <script>
-            alertify.notify('sample', 'success', 5, function(){  console.log('dismissed'); });
-            </script>
-        {% endif %} {# item add success #}
-    {% endif %} {# user is authenticated #}
-
+    </div>
 {% endblock %}
