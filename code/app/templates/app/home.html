@@ -1,17 +1,26 @@
 {% extends 'app/base.html' %}
 
 {% block content %}
-    <h3>Welcome to snaV!</h3>
-
     {% if items %}
-        <p>Recently Added:</p>
-        {% for item in items %}
-            <ul>
-                <a href="/item/{{ item.slug }}">{{ item.name }}</a>
-                <br>
-                <img src="/static/images/{{ item.image }}" alt="{{ item.image }}" width="400" height="400">
-                <br>
-            </ul>
-        {% endfor %}
+        <div class="container">
+            <div class="row w-100" style="padding-top:10px;">
+                {% for item in items %}
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="card h-100">
+                            <a href="/item/{{ item.slug }}">
+                                <img class="card-img-top" src="/static/images/{{ item.image }}" alt="{{ item.image }}">
+                            </a>
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <a href="/item/{{ item.slug }}">{{ item.name }}</a>
+                                </h4>
+                                <h5>${{ item.price }}</h5>
+                                <p class="card-text">{{ item.desc }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     {% endif %}
 {% endblock %} {# content #}
