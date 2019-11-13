@@ -31,4 +31,12 @@
 8. Go to 'https://github.com/krthornton/semesterproject/branches' in your browser
 9. Select your branch and select "Create Pull Request"
 
+# How to Rebuild the Database
+1. Open a terminal and cd to the "code" directory
+2. Activate pipenv by running ```pipenv shell```
+3. Delete the old database by running ```rm mydatabase```
+4. Check for and make any new migrations by running ```python manage.py makemigrations app```
+5. Now actually run the migrations by running ```python manage.py migrate```
+6. Finally, rebuild the DB by running ```python manage.py shell < project/init_db.py```
+
 hello world! soma;lkdsjf ligma joe mama what about yuri? tarded
