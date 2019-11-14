@@ -11,15 +11,25 @@
         {% endfor %} {# fields #}
 
         <!-- Item Information -->
-        <h1>{{ item.name }}</h1>
-        <p>
-            Description: {{ item.desc }}<br>
-            Price: ${{ item.price }}<br>
-            Stock: {{ item.stock }}<br>
-        </p>
+        <h1 id="product_name">{{ item.name }}</h1>
 
-        <!-- Item Image -->
-        <img src="/static/images/{{ item.image }}" alt="{{ item_image }}" width="400" height="400">
+        <div id="all">
+            <div id="row">
+                <div class="column">
+                    <!-- Item Image -->
+                    <img src="/static/images/{{ item.image }}" alt="{{ item_image }}" width="80%" height="80%">
+                </div>
+                <div class="column">
+                    <p style="padding-bottom: 30px">
+                        {{ item.desc }}<br>
+                    </p>
+                    <a id="bold_this">
+                        Price: ${{ item.price }}<br>
+                        Stock: {{ item.stock }}<br>
+                    </a>
+                </div>
+            </div>
+        </div>
 
         {# check if the current user is logged in #}
         {% if user.is_authenticated %}
