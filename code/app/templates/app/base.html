@@ -75,31 +75,28 @@
 
     <div class="container">
         <h1 style="padding-top:10px;padding-bottom:10px;">{% block title %}{% endblock %}</h1>
-        {% block messages %}
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
-                        <div class="alert alert-info show" role="alert">
-                            {{ message }}
-                        </div>
-                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                       <div class="alert alert-success show" role="alert">
-                            <strong>Yay!</strong> {{ message }}
-                        </div>
-                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-                       <div class="alert alert-danger show" role="alert">
-                            <strong>Oops...</strong> {{ message }}
-                        </div>
-                    {% endif %} {# if message.level #}
-                {% endfor %} {# for message #}
-            {% endif %} {# if messages #}
-        {% endblock %}
+        {% block messages %}{% endblock %}
         {% block login %}{% endblock %}
         {% block content %}{% endblock %}
     </div>
 
 </body>
 
-{% block script %}{% endblock %}
+{% block script %}
+    <script>
+        {% if messages %}
+            {% for message in messages %}
+                alertify.set('notifier', 'position', 'bottom-left');
+                {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                    alertify.notify('{{ message }}', 'warning', 5, function() {});
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                    alertify.notify('{{ message }}', 'success', 5, function() {});
+                {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                    alertify.notify('{{ message }}', 'error', 0, function() {});
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+    </script>
+{% endblock %}
 
 </html>
