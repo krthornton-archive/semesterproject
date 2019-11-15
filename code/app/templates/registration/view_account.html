@@ -1,37 +1,52 @@
 {% extends 'app/base.html' %}
 
-{% block content %}
-    <!-- Account Info -->
-    <h1>Manage Account</h1>
+{% block header %}
+    snaV: Manage Account
+{% endblock %}
 
+{% block title %}Manage Account{% endblock %}
+
+{% block content %}
     <p>
-        {{ user.first_name }}
-        {{ user.last_name }}
+        <b>Full Name:</b> {{ user.first_name }} {{ user.last_name }}
     </p>
     <p>
-        {{ user.username }}
+        <b>Username:</b> {{ user.username }}
         <br>
-        {{ user.email }}
+        <b>Email:</b>
+        {% if user.email %}
+            {{ user.email }}
+        {% else %}
+            <i>none</i>
+        {% endif %}
     </p>
     <p>
+        <b>Address:</b>
         {% if user.address %}
             {{ user.address }}
-            <br>
+        {% else %}
+            <i>none</i>
         {% endif %}
+        <br>
+        <b>Phone Number:</b>
         {% if user.phone_number %}
             {{ user.phone_number }}
-            <br>
+        {% else %}
+            <i>none</i>
         {% endif %}
+        <br>
+        <b>Credit Card:</b>
         {% if user.credit_card %}
             {{ user.credit_card }}
+        {% else %}
+            <i>none</i>
         {% endif %}
     </p>
     <p>
-        <a href="update_account">Update Above Information</a>
-        <br>
-        <a href="change_password">Change Password</a>
-        <br>
-        <a href="/accounts/logout">Logout</a>
+        <a class="btn btn-outline-primary" href="update_account">Update Above Information</a>
+        <a class="btn btn-outline-primary" href="change_password">Change Password</a>
+        <br><br>
+        <a class="btn btn-dark" href="/accounts/logout">Logout</a>
+        <a class="btn btn-outline-dark" href="/admin">Admin Site</a>
     </p>
-
 {% endblock %} {# content #}

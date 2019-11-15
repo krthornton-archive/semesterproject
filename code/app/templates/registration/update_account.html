@@ -1,8 +1,12 @@
 {% extends 'app/base.html' %}
 
-{% block content %}
+{% block header %}
+    snaV: Update Account
+{% endblock %}
 
-    <h1>Manage Account</h1>
+{% block title %}Update Account{% endblock %}
+
+{% block content %}
 
     <!-- Errors -->
     {% for field in form %}
@@ -14,24 +18,43 @@
     <!-- Form -->
     <form method="POST" action="update_account">
         {% csrf_token %}
-        <p>
-            First Name: <input name="first_name" type="text" value="{{ user.first_name }}">
-            <br>
-            Last Name: <input name="last_name" type="text" value="{{ user.last_name }}">
-        </p>
-        <p>
-            Username: <input name="username" type="text" value="{{ user.username }}">
-            <br>
-            Email: <input name="email" type="text" value="{{ user.email }}">
-        </p>
-        <p>
-            Address: <input name="address" type="text" value="{{ user.address }}">
-            <br>
-            Phone Number: <input name="phone_number" type="text" value="{{ user.phone_number }}">
-            <br>
-            Credit Card: <input name="credit_card" type="text" value="{{ user.credit_card }}">
-        </p>
-        <button type="submit">Update</button>
+        <div class="form-group" style="padding-top:10px;">
+            <label for="first_name" style="display:inline-block;">First Name:</label>
+            <input class="form-control" name="first_name"
+                   type="text" value="{{ user.first_name }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label for="last_name" style="display:inline-block;">Last Name:</label>
+            <input class="form-control" name="last_name"
+                   type="text" value="{{ user.last_name }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label for="username" style="display:inline-block;">Username:</label>
+            <input class="form-control" name="username"
+                   type="text" value="{{ user.username }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label for="email" style="display:inline-block;">Email:</label>
+            <input class="form-control" name="email"
+                   type="text" value="{{ user.email }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label>Address:</label>
+            <input class="form-control" name="address"
+                   type="text" value="{{ user.address }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label style="display:inline-block;">Phone Number:</label>
+            <input class="form-control" name="phone_number"
+                   type="text" value="{{ user.phone_number }}"
+                   style="margin:0;width:20ch;display:inline-block;">
+            <br><br>
+            <label style="display:inline-block;">Credit Card:</label>
+            <input class="form-control" name="credit_card"
+                   type="text" value="{{ user.credit_card }}" style="margin:0;width:20ch;display:inline-block;">
+        </div>
+        <button class="btn btn-primary" type="submit">Update</button>
+        <a class="btn btn-outline-dark" href="/view_account">Cancel</a>
     </form>
 
 {% endblock %} {# content #}
