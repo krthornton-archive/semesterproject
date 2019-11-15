@@ -218,8 +218,15 @@ def update_cart(request):
         user_key=form.cleaned_data['user_key'],
         item_key=form.cleaned_data['item_key']
     )
+    stock = cart_item.item_key.stock
     quantity = form.cleaned_data['quantity']
-    cart_item.quantity = quantity if quantity > 0 else 1
+    if quantity > 0:
+        if quantity < stock:
+            cart_item.quantity = quantity
+        elif quantity > stock:
+            cart_item.quantity = stock
+    elif quantity < 0:
+        cart_item.quantity = 1
     cart_item.save()
     return redirect('/view_cart')
 
@@ -236,6 +243,8 @@ def checkout(request):
             form.save()
             # remove all items from user's shopping cart
             for cart_entry in ShoppingCartItem.objects.filter(user_key=request.user):
+                cart_entry.item_key.stock -= cart_entry.quantity
+                cart_entry.item_key.save()
                 cart_entry.delete()
             # add message to notify user of checkout success; redirect to view account
             messages.add_message(request, messages.SUCCESS, "Successfully checked out!")
