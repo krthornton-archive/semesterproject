@@ -1,22 +1,24 @@
 {% extends 'app/base.html' %}
 
-{% block search %}{% endblock %}
-
 {% block login %}
-<form method="post">
+<form class="form-group" method="post">
     {% csrf_token %}
-    <label for="id_username">Username: </label>
-    {{ form.username }}
-    <br>
-    <label for="id_first_name">First Name: </label>
-    {{ form.first_name }}
-    <br>
-    <label for="id_last_name">Last Name: </label>
-    {{ form.last_name }}
-    <br>
-    <label for="id_password">Password: </label>
-    {{ form.password }}
-    <br>
-    <button type="submit">Submit</button>
+    <label for="id_username" style="display:inline-block;">Username:</label>
+    <input class="form-control" name="username" type="text"
+           style="margin:0;width:20ch;display:inline-block;">
+    <br><br>
+    <label for="first_name" style="display:inline-block;">First Name:</label>
+    <input class="form-control" name="first_name" type="text"
+           style="margin:0;width:20ch;display:inline-block;">
+    <br><br>
+    <label for="last_name" style="display:inline-block;">Last Name:</label>
+    <input class="form-control" name="last_name" type="text"
+           style="margin:0;width:20ch;display:inline-block;">
+    <br><br>
+    <label for="id_password" style="display:inline-block;">Password: </label>
+    <input class="form-control" name="password" type="password"
+           style="margin:0;width:20ch;display:inline-block;">
+    <br><br>
+    <button class="btn btn-primary" type="submit">Register</button>
 </form>
 {% endblock %}

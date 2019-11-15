@@ -1,9 +1,10 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
-from django.contrib.auth import login, update_session_auth_hash
+from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
 from django.core.exceptions import NON_FIELD_ERRORS
 
 from .models import NewUser, Item, ShoppingCartItem
@@ -16,7 +17,7 @@ from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
 def index(request):
     context = {
         'user': request.user,
-        'items': Item.objects.order_by('date_added'),
+        'items': Item.objects.order_by('-date_added'),
     }
     return render(request, 'app/home.html', context)
 
@@ -88,6 +89,27 @@ def change_password(request):
         return render(request, 'registration/change_password.html', context)
 
 
+# view for logging a user in
+@require_http_methods(['GET', 'POST'])
+def login_user(request):
+    if request.method == 'POST':
+        # validate user information
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            # if the user authenticates, log them in and redirect to home page
+            login(request, user)
+            return redirect('/')
+        else:
+            # user must have entered a bad username or password; notify them
+            messages.add_message(request, messages.INFO, "Invalid username or password.")
+            return redirect('/login')
+    else:
+        # must be a get request, display login page
+        return render(request, 'registration/login.html', {})
+
+
 # view for creating new users
 @require_http_methods(['GET', 'POST'])
 def register(request):
@@ -99,13 +121,18 @@ def register(request):
         }
         return render(request, 'registration/register.html', context)
     elif request.method == 'POST':
-        # create a new user from the form and log them in
+        # user submitted a form, check if its valid
         form = NewUserForm(request.POST)
         if form.is_valid():
+            # if so, log the user in and redirect to home page
             user = NewUser.objects.create_user(**form.cleaned_data)
             user.save()
             login(request, user)
-        return index(request)
+            return index(request)
+        else:
+            # username must already exist, notify user
+            messages.add_message(request, messages.INFO, "Username taken. Please choose another.")
+            return redirect('/register')
 
 
 # view for viewing a specific item
@@ -156,19 +183,45 @@ def view_cart(request):
                                                      user_key=form.cleaned_data['user_key'])
             item_name = cart_item.item_key.name
             cart_item.delete()
-            messages.add_message(request, messages.SUCCESS, "Successfully removed %s" % item_name)
             return redirect('/view_cart')
         else:
             # something went wrong, notify user
-            messages.add_message(request, messages.ERROR, "Error: invalid form")
+            messages.add_message(request, messages.error, "Error: invalid form")
             return redirect('/view_cart')
     else:
         # this must be a GET request, display user's shopping cart
+        subtotal = 0
+        for cart_entry in ShoppingCartItem.objects.filter(user_key=request.user):
+            subtotal += cart_entry.item_key.price * cart_entry.quantity
+        tax = 0.0725 * subtotal    # calculate tax
+        shipping = "FREE"
+        total = subtotal + tax
         context = {
             'user': request.user,
-            'cart_items': ShoppingCartItem.objects.filter(user_key=request.user)
+            'cart_items': ShoppingCartItem.objects.filter(user_key=request.user),
+            'total': round(total, 2),
+            'tax': round(tax, 2),
+            'shipping': shipping,
+            'subtotal': round(subtotal, 2),
         }
         return render(request, 'registration/view_cart.html', context)
+
+
+# view for updating a user's shopping cart item
+@login_required
+@require_http_methods(['POST'])
+def update_cart(request):
+    form = NewShoppingCartItemForm(request.POST)
+    form.full_clean()
+    cart_item = get_object_or_404(
+        ShoppingCartItem,
+        user_key=form.cleaned_data['user_key'],
+        item_key=form.cleaned_data['item_key']
+    )
+    quantity = form.cleaned_data['quantity']
+    cart_item.quantity = quantity if quantity > 0 else 1
+    cart_item.save()
+    return redirect('/view_cart')
 
 
 # view for checking out the user's shopping cart
@@ -214,9 +267,10 @@ def browse_items(request):
         form = ItemSearchForm(request.POST)
         if form.is_valid():
             # if form is valid, return search results
-            items = Item.objects.filter(name__contains=form.cleaned_data['name'])
+            items = Item.objects.filter(name__contains=form.cleaned_data['name']).order_by('name')
             context = {
-               'items': items,
+                'items': items,
+                'search_term': form.cleaned_data['name'],
             }
             return render(request, 'app/browse.html', context)
         else:

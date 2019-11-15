@@ -1,9 +1,14 @@
 {% extends 'app/base.html' %}
 
-{% block login %}
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Submit</button>
-</form>
-{% endblock %}
+{% block content %}
+    <form method="POST">
+        {% csrf_token %}
+        <label for="username">Username:</label>
+        <input class="form-control" type="text" name="username" style="margin:0;width:20ch;display:inline-block;">
+        <br><br>
+        <label for="password">Password:</label>
+        <input class="form-control" type="password" name="password" style="margin:0;width:20ch;display:inline-block;">
+        <br><br>
+        <button class="btn btn-primary" type="submit">Login</button>
+    </form>
+{% endblock %} {# content #}

@@ -1,31 +1,79 @@
 {% extends 'app/base.html' %}
 
-{% block content %}
-    <!-- Shopping Cart -->
-    <h1>Shopping Cart</h1>
-    <table>
-        {% for item in cart_items %}
-            <tr id="row-{{ item.item_key.uid }}">
-                <td>
-                    <img src="static/images/{{ item.item_key.image }}" width="100" height="100">
-                </td>
-                <td>
-                    <a href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
-                    <br>
-                    Quantity: {{ item.quantity }}
-                </td>
-                <td>
-                    <form method="POST">
-                        {% csrf_token %}
-                        <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
-                        <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
-                        <button type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %} {# items in shopping cart #}
-    </table>
+{% block header %}
+    snaV: Shopping Cart
+{% endblock %}
 
-    <!-- Checkout -->
-    <a href="/checkout" class="btn btn-primary">Checkout</a>
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+
+            <div class="col-sm" style="padding-left:0;">
+                <!-- Shopping Cart -->
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                        <div class="card mb-3" style="width:400px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4" style="max-width:200px;">
+                                    <img class="card-img" src="static/images/{{ item.item_key.image }}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <a class="card-title" href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
+                                        <div class="card-text">
+                                            <form method="POST" action="/update_cart"
+                                                  style="position:absolute;bottom:12px;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
+                                                <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
+                                                <label for="quantity">Quantity:</label>
+                                                <input class="form-control" type="number" name="quantity"
+                                                       min="1" value="{{ item.quantity }}"
+                                                       onchange="this.form.submit()"
+                                                       style="width:8ch;margin:0;">
+                                            </form>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
+                                                <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
+                                                <button class="btn btn-outline-danger" type="submit"
+                                                        style="position:absolute;bottom:12px;right:12px;">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} {# items in shopping cart #}
+                {% else %}
+                    Your shopping cart is empty.
+                {% endif %}
+            </div>
+
+            <div class="col-sm" style="padding-right:0;text-align:right;">
+                <div class="card" style="position:absolute;right:0;">
+                    <div class="card-body">
+                        <!-- Checkout -->
+                        <h3>Total: ${{ total }}</h3>
+                        <a>
+                            Subtotal: ${{ subtotal }}<br>
+                            Tax: ${{ tax }}<br>
+                            Estimated Shipping: {{ shipping }}<br>
+                        </a>
+                    </div>
+
+                    <div class="card-footer">
+                        {% if cart_items %}
+                            <a href="/checkout" class="btn btn-primary">Checkout</a>
+                        {% else %}
+                            <a href="/checkout" class="btn btn-secondary disabled">Checkout</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 {% endblock %} {# content #}

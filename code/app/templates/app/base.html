@@ -6,19 +6,19 @@
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/static/css/bootstrap.css">
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/static/css/alertify.rtl.min.css">
     <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}/static/css/alertify.min.css">
+    <link rel="shortcut icon" href="{{ STATIC_URL }}/static/images/apple-touch-icon.png">
     <script type="text/javascript" src="{{ STATIC_URL }}/static/js/jquery-3.4.1.min.js"></script>
     <script type="text/javascript" src="/static/js/alertify.min.js"></script>
-    {% block title %}
-    <title>Title</title>
-    {% endblock %}
-
+    <title>
+        {% block header %}
+            snaV: Home
+        {% endblock %}
+    </title>
     <style>
-
         input{
             margin: 12px;
             padding: 2px;
         }
-
         button{
             padding-left: 12px;
         }
@@ -48,14 +48,15 @@
     {% block navbar %}
         <nav class="navbar navbar-expand-lg bg-light justify-content-between">
             <div class="navbar-nav">
-                <a class="navbar-brand" href="/">snaV</a>
+                <a class="navbar-brand" href="/">
+                    <img src="/static/images/logo.png" style="height:50px" alt="Home">
+                </a>
             </div>
             <div>
                 {% block search %}
                     <form class = "form-inline" method="POST" action="/browse">
                         {% csrf_token %}
-                        <label for="name">Search:</label>
-                        <input type="text" name="name" placeholder="Search..">
+                        <input class="form-control" type="text" name="name" placeholder="Search..." required>
                         <button class="btn btn-outline-primary" type="submit">Search</button>
                     </form>
                 {% endblock %} {# search #}
@@ -65,26 +66,38 @@
                     <a class="nav-link" href="/view_account">Account</a>
                     <a class="nav-link" href="/view_cart">Shopping Cart</a>
                 {% else %}
-                    <a class= "nav-link" href="/accounts/login">Login</a>
+                    <a class= "nav-link" href="/login">Login</a>
                     <a class="nav-link" href="/register">Register</a>
                 {% endif %} {# user.is_authenticated #}
             </div>
         </nav>
     {% endblock %} {# navbar #}
 
-    {% block messages %}
-        {% if messages %}
-            {% for message in messages %}
-                <script>
-                alertify.set('notifier','position', 'bottom-right');
-                alertify.notify('{{ message }}', 'success', 5, function(){  console.log('dismissed'); });
-                </script>
-            {% endfor %} {# for message #}
-        {% endif %} {# if messages #}
-    {% endblock %}
+    <div class="container">
+        <h1 style="padding-top:10px;padding-bottom:10px;">{% block title %}{% endblock %}</h1>
+        {% block messages %}
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
+                        <div class="alert alert-info show" role="alert">
+                            {{ message }}
+                        </div>
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                       <div class="alert alert-success show" role="alert">
+                            <strong>Yay!</strong> {{ message }}
+                        </div>
+                    {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                       <div class="alert alert-danger show" role="alert">
+                            <strong>Oops...</strong> {{ message }}
+                        </div>
+                    {% endif %} {# if message.level #}
+                {% endfor %} {# for message #}
+            {% endif %} {# if messages #}
+        {% endblock %}
+        {% block login %}{% endblock %}
+        {% block content %}{% endblock %}
+    </div>
 
-    {% block login %}{% endblock %}
-    {% block content %}{% endblock %}
 </body>
 
 {% block script %}{% endblock %}
