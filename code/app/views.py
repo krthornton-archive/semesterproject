@@ -79,6 +79,7 @@ def change_password(request):
             context = {
                 'form': form,
             }
+            messages.add_message(request, messages.ERROR, "Old password and/or New password invalid.")
             return render(request, 'registration/change_password.html', context)
     else:
         # this is a GET request, display password change form
