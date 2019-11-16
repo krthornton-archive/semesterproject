@@ -19,7 +19,7 @@ class Item(models.Model):
     name = models.TextField(unique=True, max_length=30, blank=False)
     slug = models.SlugField(unique=True)
     date_added = models.DateTimeField(default=datetime.datetime.now)
-    desc = models.TextField(max_length=100, blank=False)
+    desc = models.TextField(max_length=1000, blank=False)
     price = models.FloatField(default=0.00, blank=False)
     stock = models.IntegerField(default=0, blank=False)
     image = models.TextField(blank=True)

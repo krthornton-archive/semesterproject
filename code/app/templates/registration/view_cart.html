@@ -14,14 +14,15 @@
                 <!-- Shopping Cart -->
                 {% if cart_items %}
                     {% for item in cart_items %}
-                        <div class="card mb-3" style="width:400px;">
+                        <div class="card mb-3" style="width:500px;">
                             <div class="row no-gutters">
-                                <div class="col-md-4" style="max-width:200px;">
+                                <div class="col-md-4">
                                     <img class="card-img" src="static/images/{{ item.item_key.image }}">
                                 </div>
                                 <div class="col-md-8">
                                     <div class="card-body">
                                         <a class="card-title" href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
+                                        <h5>${{ item.item_key.price }}</h5>
                                         <div class="card-text">
                                             <form method="POST" action="/update_cart"
                                                   style="position:absolute;bottom:12px;">
@@ -29,11 +30,14 @@
                                                 <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
                                                 <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
                                                 <label for="quantity">Quantity:</label>
-                                                <input class="form-control" type="number" name="quantity"
-                                                       min="1" value="{{ item.quantity }}"
-                                                       max="{{ item.item_key.stock }}"
-                                                       onchange="this.form.submit()"
-                                                       style="width:8ch;margin:0;">
+                                                <div>
+                                                    <input class="form-control" type="number" name="quantity"
+                                                           min="1" value="{{ item.quantity }}"
+                                                           max="{{ item.item_key.stock }}"
+                                                           onchange="this.form.submit()"
+                                                           style="width:8ch;margin:0;margin-right:6px;display:inline;">
+                                                    <a>{{ item.item_key.stock }} in stock</a>
+                                                </div>
                                             </form>
                                             <form method="POST">
                                                 {% csrf_token %}

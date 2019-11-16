@@ -1,35 +1,96 @@
 {% extends 'app/base.html' %}
 
+{% block header %}
+    snaV: Checkout
+{% endblock %}
+
+{% block title %}
+    Checkout
+{% endblock %}
+
 {% block content %}
-    <h1>Checkout</h1>
-    <table>
-        {% for item in cart_items %}
-            <tr id="row-{{ item.item_key.uid }}">
-                <td>
-                    <img src="static/images/{{ item.item_key.image }}" width="100" height="100">
-                </td>
-                <td>
-                    <a href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
-                    <br>
-                    Quantity: {{ item.quantity }}
-                </td>
-            </tr>
-        {% endfor %} {# items in shopping cart #}
-    </table>
+    <div class="container">
+        <div class="row">
 
-    <h3>Subtotal: ${{ subtotal }}</h3>
+            <div class="col-sm" style="padding-left:0;">
+                <!-- Shopping Cart -->
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                        <div class="card mb-3" style="width:500px;">
+                            <div class="row no-gutters">
+                                <div class="col-md-4" style="max-width:200px;">
+                                    <img class="card-img" src="static/images/{{ item.item_key.image }}">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <a class="card-title" href="item/{{ item.item_key.slug }}">{{ item.item_key.name }}</a>
+                                        <h5>${{ item.item_key.price }}</h5>
+                                        <div class="card-text">
+                                            <form method="POST" action="/update_cart"
+                                                  style="position:absolute;bottom:12px;">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
+                                                <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
+                                                <label for="quantity">Quantity:</label>
+                                                <input class="form-control" type="number" name="quantity"
+                                                       min="1" value="{{ item.quantity }}"
+                                                       max="{{ item.item_key.stock }}"
+                                                       onchange="this.form.submit()"
+                                                       style="width:8ch;margin:0;">
+                                            </form>
+                                            <form method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
+                                                <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
+                                                <button class="btn btn-outline-danger" type="submit"
+                                                        style="position:absolute;bottom:12px;right:12px;">Remove</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %} {# items in shopping cart #}
+                {% else %}
+                    Your shopping cart is empty.
+                {% endif %}
+            </div>
 
-    <!-- Checkout Confirmation -->
-    <form method="POST">
-        <p>Are you sure you want to checkout?</p>
-        <p>Please confirm the following information:</p>
-        {% csrf_token %}
-        <input type="hidden" name="confirm" value="true">
-        <label for="address">Address: </label>
-        <input type="text" name="address" value="{{ user.address }}" required><br>
-        <label for="credit_card">Credit Card: </label>
-        <input type="text" name="credit_card" value="{{ user.credit_card }}" required><br>
-        <input type="submit" class="btn btn-primary" value="Confirm and Checkout">
-    </form>
+            <div class="col-sm" style="padding-right:0;text-align:right;">
+                <div class="card" style="position:absolute;right:0;">
+                    <div class="card-body">
+                        <!-- Checkout -->
+                        <h3>Total: ${{ total }}</h3>
+                        <a>
+                            Subtotal: ${{ subtotal }}<br>
+                            Tax: ${{ tax }}<br>
+                            Estimated Shipping: {{ shipping }}<br>
+                        </a>
+                    </div>
 
+                    <div class="card-footer">
+                        {% if cart_items %}
+                            <form method="POST" style="text-align:left;">
+                                {% csrf_token %}
+                                <label for="address">Address:</label>
+                                <input class="form-control" name="address" type="text"
+                                       style="margin:0;" value="{{ user.address }}" required>
+                                <label for="credit_card" style="padding-top:10px;">Credit Card:</label>
+                                <input class="form-control" name="credit_card" type="text"
+                                       style="margin-left:0;margin-top:0;margin-bottom:15px;"
+                                       value="{{ user.credit_card }}" required>
+                                <div style="text-align:right;">
+                                    <button type="submit" href="/checkout" class="btn btn-primary"
+                                       style="margin-bottom:2px;">Place Order</button>
+                                </div>
+                            </form>
+                        {% else %}
+                            <a href="/checkout" class="btn btn-secondary disabled">Confirm and Pay</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 {% endblock %} {# content #}
