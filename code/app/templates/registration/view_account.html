@@ -8,7 +8,12 @@
 
 {% block content %}
     <p>
-        <b>Full Name:</b> {{ user.first_name }} {{ user.last_name }}
+        <b>Full Name:</b>
+        {% if user.first_name and user.last_name %}
+            {{ user.first_name }} {{ user.last_name }}
+        {% else %}
+            <i>none</i>
+        {% endif %}
     </p>
     <p>
         <b>Username:</b> {{ user.username }}

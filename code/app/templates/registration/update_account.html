@@ -8,13 +8,6 @@
 
 {% block content %}
 
-    <!-- Errors -->
-    {% for field in form %}
-        {% for error in field.errors %}
-            <p style="color: red;">{{ field.name }}: {{ error }}</p>
-        {% endfor %} {# errors #}
-    {% endfor %} {# fields #}
-
     <!-- Form -->
     <form method="POST" action="update_account">
         {% csrf_token %}

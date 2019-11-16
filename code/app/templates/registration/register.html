@@ -5,19 +5,19 @@
     {% csrf_token %}
     <label for="id_username" style="display:inline-block;">Username:</label>
     <input class="form-control" name="username" type="text"
-           style="margin:0;width:20ch;display:inline-block;">
+           style="margin:0;width:20ch;display:inline-block;" required>
     <br><br>
     <label for="first_name" style="display:inline-block;">First Name:</label>
     <input class="form-control" name="first_name" type="text"
-           style="margin:0;width:20ch;display:inline-block;">
+           style="margin:0;width:20ch;display:inline-block;" required>
     <br><br>
     <label for="last_name" style="display:inline-block;">Last Name:</label>
     <input class="form-control" name="last_name" type="text"
-           style="margin:0;width:20ch;display:inline-block;">
+           style="margin:0;width:20ch;display:inline-block;" required>
     <br><br>
     <label for="id_password" style="display:inline-block;">Password: </label>
     <input class="form-control" name="password" type="password"
-           style="margin:0;width:20ch;display:inline-block;">
+           style="margin:0;width:20ch;display:inline-block;" required>
     <br><br>
     <button class="btn btn-primary" type="submit">Register</button>
 </form>

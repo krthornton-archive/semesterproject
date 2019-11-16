@@ -16,6 +16,9 @@
                                 <a href="/item/{{ item.slug }}">{{ item.name }}</a>
                             </h4>
                             <h5>${{ item.price }}</h5>
+                            {% if item.stock <= 0 %}
+                                <a style="color:red;">Out of Stock</a>
+                            {% endif %}
                             <p class="card-text">{{ item.desc }}</p>
                         </div>
                     </div>

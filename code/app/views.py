@@ -43,7 +43,7 @@ def update_account_info(request):
         if form.is_valid():
             # if valid, redirect to view_account and re-login the user
             form.save()
-            messages.add_message(request, messages.INFO, "User information updated!")
+            messages.add_message(request, messages.SUCCESS, "User information updated!")
             return redirect('/view_account')
         else:
             # form is not valid, notify user
@@ -51,6 +51,7 @@ def update_account_info(request):
                 'user': request.user,
                 'form': form,
             }
+            messages.add_message(request, messages.ERROR, "Invalid user information.")
             return render(request, 'registration/update_account.html', context)
     else:
         form = UpdateUserInfoForm()
@@ -132,7 +133,12 @@ def register(request):
             return index(request)
         else:
             # username must already exist, notify user
-            messages.add_message(request, messages.INFO, "Username taken. Please choose another.")
+            if form.has_error(field='username'):
+                messages.add_message(request, messages.ERROR, "Username taken or invalid.")
+            elif form.has_error(field='first_name'):
+                messages.add_message(request, messages.ERROR, "First name is invalid.")
+            elif form.has_error(field='last_name'):
+                messages.add_message(request, messages.ERROR, "Last name is invalid.")
             return redirect('/register')
 
 
@@ -166,7 +172,14 @@ def item_description(request, slug):
         context = {
             'item': item,
             'user': request.user,
+            'in_cart': False,
         }
+        # check if the user is logged in and if this item is already in their cart
+        if request.user.is_authenticated and ShoppingCartItem.objects.filter(
+                user_key=request.user,
+                item_key=item
+        ).exists():
+            context['in_cart'] = True
         return render(request, 'app/item_description.html', context)
 
 
@@ -187,11 +200,11 @@ def view_cart(request):
             return redirect('/view_cart')
         else:
             # something went wrong, notify user
-            messages.add_message(request, messages.error, "Error: invalid form")
+            messages.add_message(request, messages.error, "Invalid form.")
             return redirect('/view_cart')
     else:
         # this must be a GET request, display user's shopping cart
-        subtotal = 0
+        subtotal = 0.0
         for cart_entry in ShoppingCartItem.objects.filter(user_key=request.user):
             subtotal += cart_entry.item_key.price * cart_entry.quantity
         tax = 0.0725 * subtotal    # calculate tax
@@ -200,10 +213,10 @@ def view_cart(request):
         context = {
             'user': request.user,
             'cart_items': ShoppingCartItem.objects.filter(user_key=request.user),
-            'total': round(total, 2),
-            'tax': round(tax, 2),
+            'total': f"{total:,.2f}",
+            'tax': f"{tax:,.2f}",
             'shipping': shipping,
-            'subtotal': round(subtotal, 2),
+            'subtotal': f"{subtotal:,.2f}",
         }
         return render(request, 'registration/view_cart.html', context)
 
@@ -221,13 +234,12 @@ def update_cart(request):
     )
     stock = cart_item.item_key.stock
     quantity = form.cleaned_data['quantity']
-    if quantity > 0:
-        if quantity < stock:
-            cart_item.quantity = quantity
-        elif quantity > stock:
-            cart_item.quantity = stock
-    elif quantity < 0:
+    if quantity <= 0:
         cart_item.quantity = 1
+    elif quantity > stock:
+        cart_item.quantity = stock
+    else:
+        cart_item.quantity = quantity
     cart_item.save()
     return redirect('/view_cart')
 
@@ -245,25 +257,36 @@ def checkout(request):
             # remove all items from user's shopping cart
             for cart_entry in ShoppingCartItem.objects.filter(user_key=request.user):
                 cart_entry.item_key.stock -= cart_entry.quantity
+                if cart_entry.item_key.stock < 0:
+                    cart_entry.item_key.stock = 0
                 cart_entry.item_key.save()
                 cart_entry.delete()
             # add message to notify user of checkout success; redirect to view account
-            messages.add_message(request, messages.SUCCESS, "Successfully checked out!")
-            return redirect('/view_account')
+            messages.add_message(request, messages.SUCCESS, "Your order has been placed!")
+            return redirect('/')
         else:
             # something went wrong if the form is invalid, notify the user
-            messages.add_message(request, messages.ERROR, "invalid form")
+            if form.has_error(field='credit_card'):
+                messages.add_message(request, messages.ERROR, "Invalid credit card.")
+            elif form.has_error(field='address'):
+                messages.add_message(request, messages.ERROR, "Invalid address.")
             return redirect('/checkout')
     else:
         # this must be a GET request; calculate subtotal and give user form
         subtotal = 0
         for cart_entry in ShoppingCartItem.objects.filter(user_key=request.user):
             subtotal += cart_entry.item_key.price * cart_entry.quantity
+        tax = 0.0725 * subtotal  # calculate tax
+        shipping = "FREE"
+        total = subtotal + tax
         form = ConfirmCheckoutForm()
         context = {
             'user': request.user,
             'form': form,
-            'subtotal': round(subtotal, 2),
+            'total': f"{total:,.2f}",
+            'tax': f"{tax:,.2f}",
+            'shipping': shipping,
+            'subtotal': f"{subtotal:,.2f}",
             'cart_items': ShoppingCartItem.objects.filter(user_key=request.user),
         }
         return render(request, 'registration/checkout.html', context)
