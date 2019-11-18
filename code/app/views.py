@@ -101,6 +101,7 @@ def login_user(request):
         if user is not None:
             # if the user authenticates, log them in and redirect to home page
             login(request, user)
+            messages.add_message(request, messages.SUCCESS, "Welcome %s!" % user.first_name)
             return redirect('/')
         else:
             # user must have entered a bad username or password; notify them
@@ -156,7 +157,11 @@ def item_description(request, slug):
         if form.is_valid():
             # save the form to add item to the user's cart; notify user of success
             form.save()
-            messages.add_message(request, messages.SUCCESS, "Successfully added %s to your shopping cart." % item.name)
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Successfully added %s to your shopping cart." % item.name
+            )
         else:
             if form.has_error(NON_FIELD_ERRORS, 'unique_together'):
                 # user must already have the item in their cart; notify the user

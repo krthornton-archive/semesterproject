@@ -1,7 +1,7 @@
 {% extends 'app/base.html' %}
 
 {% block login %}
-<form class="form-group" method="post">
+<div align=center><form class="form-group" method="post">
     {% csrf_token %}
     <label for="id_username" style="display:inline-block;">Username:</label>
     <input class="form-control" name="username" type="text"
@@ -20,5 +20,5 @@
            style="margin:0;width:20ch;display:inline-block;" required>
     <br><br>
     <button class="btn btn-primary" type="submit">Register</button>
-</form>
+</form></div>
 {% endblock %}

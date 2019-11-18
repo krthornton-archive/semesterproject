@@ -4,12 +4,12 @@
     snaV: Update Account
 {% endblock %}
 
-{% block title %}Update Account{% endblock %}
+{% block title %}<div align=center>Update Account</div>{% endblock %}
 
 {% block content %}
 
     <!-- Form -->
-    <form method="POST" action="update_account">
+    <div align=center><form method="POST" action="update_account">
         {% csrf_token %}
         <div class="form-group" style="padding-top:10px;">
             <label for="first_name" style="display:inline-block;">First Name:</label>
@@ -48,6 +48,6 @@
         </div>
         <button class="btn btn-primary" type="submit">Update</button>
         <a class="btn btn-outline-dark" href="/view_account">Cancel</a>
-    </form>
+    </form></div>
 
 {% endblock %} {# content #}

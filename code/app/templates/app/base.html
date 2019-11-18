@@ -65,6 +65,7 @@
                 {% if user.is_authenticated %}
                     <a class="nav-link" href="/view_account">Account</a>
                     <a class="nav-link" href="/view_cart">Shopping Cart</a>
+                    <a class="nav-link" href="/accounts/logout">Logout</a>
                 {% else %}
                     <a class= "nav-link" href="/login">Login</a>
                     <a class="nav-link" href="/register">Register</a>
@@ -90,7 +91,11 @@
                 {% if message.level == DEFAULT_MESSAGE_LEVELS.INFO %}
                     alertify.notify('{{ message }}', 'warning', 5, function() {});
                 {% elif message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-                    alertify.notify('{{ message }}', 'success', 5, function() {});
+                    {% if "shopping cart" in message %}
+                        alertify.notify('{{ message }}', 'success', 5, function() {});
+                    {% else %}
+                        alertify.notify('{{ message }}', 'success', 5, function() {});
+                    {% endif %}
                 {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
                     alertify.notify('{{ message }}', 'error', 0, function() {});
                 {% endif %}
