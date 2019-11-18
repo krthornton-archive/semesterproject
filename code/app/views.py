@@ -1,16 +1,15 @@
-from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, update_session_auth_hash
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.exceptions import NON_FIELD_ERRORS
 
 from .models import NewUser, Item, ShoppingCartItem
 from .forms import NewUserForm, ItemSearchForm, UpdateUserInfoForm,\
                    NewShoppingCartItemForm, RemoveCartItemForm,\
-                   ConfirmCheckoutForm
+                   ConfirmCheckoutForm, UpdateCartItemForm
 
 
 # shows the user the home page along with the recently added shoes
@@ -225,23 +224,25 @@ def view_cart(request):
 @login_required
 @require_http_methods(['POST'])
 def update_cart(request):
-    form = NewShoppingCartItemForm(request.POST)
-    form.full_clean()
-    cart_item = get_object_or_404(
-        ShoppingCartItem,
-        user_key=form.cleaned_data['user_key'],
-        item_key=form.cleaned_data['item_key']
-    )
-    stock = cart_item.item_key.stock
-    quantity = form.cleaned_data['quantity']
-    if quantity <= 0:
-        cart_item.quantity = 1
-    elif quantity > stock:
-        cart_item.quantity = stock
+    form = UpdateCartItemForm(request.POST)
+    if form.is_valid():
+        cart_item = get_object_or_404(
+            ShoppingCartItem,
+            user_key=form.cleaned_data['user_key'],
+            item_key=form.cleaned_data['item_key']
+        )
+        stock = cart_item.item_key.stock
+        quantity = form.cleaned_data['quantity']
+        if quantity <= 0:
+            cart_item.quantity = 1
+        elif quantity > stock:
+            cart_item.quantity = stock
+        else:
+            cart_item.quantity = quantity
+        cart_item.save()
+        return redirect('/view_cart')
     else:
-        cart_item.quantity = quantity
-    cart_item.save()
-    return redirect('/view_cart')
+        return redirect('/view_cart')
 
 
 # view for checking out the user's shopping cart

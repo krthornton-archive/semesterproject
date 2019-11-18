@@ -111,6 +111,21 @@ class RemoveCartItemForm(forms.ModelForm):
         ]
 
 
+# form for updating a shopping cart item
+class UpdateCartItemForm(forms.ModelForm):
+    class Meta:
+        model = ShoppingCartItem
+        fields = [
+            'user_key',
+            'item_key',
+            'quantity',
+        ]
+
+    def validate_unique(self):
+        # do nothing as to allow modifying original
+        pass
+
+
 # form for confirming that a user wants to checkout
 class ConfirmCheckoutForm(forms.ModelForm):
     def clean_credit_card(self):
