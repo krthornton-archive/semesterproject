@@ -32,11 +32,14 @@
                                                 <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
                                                 <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
                                                 <label for="quantity">Quantity:</label>
-                                                <input class="form-control" type="number" name="quantity"
-                                                       min="1" value="{{ item.quantity }}"
-                                                       max="{{ item.item_key.stock }}"
-                                                       onchange="this.form.submit()"
-                                                       style="width:8ch;margin:0;">
+                                                <div>
+                                                    <input class="form-control" type="number" name="quantity"
+                                                           min="1" value="{{ item.quantity }}"
+                                                           max="{{ item.item_key.stock }}"
+                                                           onchange="this.form.submit()"
+                                                           style="width:8ch;margin:0;margin-right:6px;display:inline;">
+                                                    <a>{{ item.item_key.stock }} in stock</a>
+                                                </div>
                                             </form>
                                             <form method="POST">
                                                 {% csrf_token %}
