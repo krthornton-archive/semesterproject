@@ -1,5 +1,11 @@
 {% extends 'app/base.html' %}
 
+{% block header %}
+    snaV: Login
+{% endblock %}
+
+{% block title %}Login{% endblock %}
+
 {% block content %}
     <form method="POST">
         {% csrf_token %}

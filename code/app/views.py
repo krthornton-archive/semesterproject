@@ -101,6 +101,7 @@ def login_user(request):
         if user is not None:
             # if the user authenticates, log them in and redirect to home page
             login(request, user)
+            messages.add_message(request, messages.SUCCESS, "Welcome %s!" % request.user.first_name)
             return redirect('/')
         else:
             # user must have entered a bad username or password; notify them
@@ -268,9 +269,21 @@ def checkout(request):
         else:
             # something went wrong if the form is invalid, notify the user
             if form.has_error(field='credit_card'):
-                messages.add_message(request, messages.ERROR, "Invalid credit card.")
+                messages.add_message(
+                    request,
+                    messages.ERROR,
+                    "Invalid credit card. Please enter a valid 16-number credit card"
+                )
             elif form.has_error(field='address'):
                 messages.add_message(request, messages.ERROR, "Invalid address.")
+            elif form.has_error(field='ccv'):
+                messages.add_message(request, messages.ERROR, "Invalid CCV.")
+            elif form.has_error(field='exp_date'):
+                messages.add_message(request, messages.ERROR, "Invalid expiration date.")
+            elif form.has_error(field='cardholder'):
+                messages.add_message(request, messages.ERROR, "Invalid cardholder name.")
+            else:
+                messages.add_message(request, messages.ERROR, "Invalid form. %s" % form.errors)
             return redirect('/checkout')
     else:
         # this must be a GET request; calculate subtotal and give user form

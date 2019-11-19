@@ -80,11 +80,28 @@
                                        style="margin:0;" value="{{ user.address }}" required>
                                 <label for="credit_card" style="padding-top:10px;">Credit Card:</label>
                                 <input class="form-control" name="credit_card" type="text"
-                                       style="margin-left:0;margin-top:0;margin-bottom:15px;"
+                                       style="margin:0;"
                                        value="{{ user.credit_card }}" required>
+                                <label for="cardholder" style="padding-top:10px;">Cardholder's Name:</label>
+                                <input class="form-control" name="cardholder" type="text"
+                                       style="margin:0;" placeholder="Johnny Appleseed" required>
+                                <div style="margin-top:10px;">
+                                    <div style="float:left;">
+                                        <label for="ccv">CCV:</label>
+                                        <input class="form-control" name="ccv" type="password"
+                                               style="margin:0;width:11ch;margin-bottom:15px;"
+                                               placeholder="0000" required>
+                                    </div>
+                                    <div style="float:right;">
+                                        <label for="exp_date">Exp. Date:</label>
+                                        <input class="form-control" name="exp_date" type="text"
+                                               style="margin:0;width:11ch;margin-bottom:15px;"
+                                               placeholder="mm/dd" required>
+                                    </div>
+                                </div>
                                 <div style="text-align:right;">
                                     <button type="submit" href="/checkout" class="btn btn-primary"
-                                       style="margin-bottom:2px;">Place Order</button>
+                                       style="width:100%;margin-bottom:2px;">Place Order</button>
                                 </div>
                             </form>
                         {% else %}
