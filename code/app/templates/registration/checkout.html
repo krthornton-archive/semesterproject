@@ -41,7 +41,7 @@
                                                     <a>{{ item.item_key.stock }} in stock</a>
                                                 </div>
                                             </form>
-                                            <form method="POST">
+                                            <form method="POST" action="/view_cart">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="item_key" value="{{ item.item_key.uid }}">
                                                 <input type="hidden" name="user_key" value="{{ item.user_key.id }}">
@@ -73,7 +73,7 @@
 
                     <div class="card-footer">
                         {% if cart_items %}
-                            <form method="POST" style="text-align:left;">
+                            <form method="POST" style="text-align:left;" action="/checkout">
                                 {% csrf_token %}
                                 <label for="address">Address:</label>
                                 <input class="form-control" name="address" type="text"
