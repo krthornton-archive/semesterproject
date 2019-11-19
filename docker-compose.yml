@@ -1,7 +1,7 @@
 version: "2"
 services:
   django:
-    container_name: django_server
+    container_name: django
     build:
       context: .
       dockerfile: Dockerfile
