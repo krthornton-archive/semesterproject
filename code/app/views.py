@@ -130,6 +130,7 @@ def register(request):
             user = NewUser.objects.create_user(**form.cleaned_data)
             user.save()
             login(request, user)
+            messages.add_message(request, messages.SUCCESS, "Welcome %s!" % request.user.first_name)
             return index(request)
         else:
             # username must already exist, notify user
@@ -276,8 +277,8 @@ def checkout(request):
                 )
             elif form.has_error(field='address'):
                 messages.add_message(request, messages.ERROR, "Invalid address.")
-            elif form.has_error(field='ccv'):
-                messages.add_message(request, messages.ERROR, "Invalid CCV.")
+            elif form.has_error(field='cvv'):
+                messages.add_message(request, messages.ERROR, "Invalid CVV.")
             elif form.has_error(field='exp_date'):
                 messages.add_message(request, messages.ERROR, "Invalid expiration date.")
             elif form.has_error(field='cardholder'):
