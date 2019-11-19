@@ -128,6 +128,28 @@ class UpdateCartItemForm(forms.ModelForm):
 
 # form for confirming that a user wants to checkout
 class ConfirmCheckoutForm(forms.ModelForm):
+    cardholder = forms.CharField()
+    ccv = forms.CharField()
+    exp_date = forms.CharField()
+
+    def clean_cardholder(self):
+        pattern = re.compile("^[a-zA-Z ]*$")
+        if not pattern.match(self.cleaned_data['cardholder']):
+            raise ValidationError("Invalid Cardholder Name")
+        return self.cleaned_data['cardholder']
+
+    def clean_ccv(self):
+        pattern = re.compile("^[0-9]{3,4}$")
+        if not pattern.match(self.cleaned_data['ccv']):
+            raise ValidationError("Invalid CCV")
+        return self.cleaned_data['ccv']
+
+    def clean_exp_date(self):
+        pattern = re.compile("^[0-9]{2}[/][0-9]{2}$")
+        if not pattern.match(self.cleaned_data['exp_date']):
+            raise ValidationError("Invalid Expiration Date")
+        return self.cleaned_data['exp_date']
+
     def clean_credit_card(self):
         pattern = re.compile("^[0-9]{16}$")
         if not pattern.match(self.cleaned_data['credit_card']):
